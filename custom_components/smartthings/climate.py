@@ -1,3 +1,4 @@
+
 """Support for climate devices through the SmartThings cloud API."""
 from __future__ import annotations
 
@@ -334,17 +335,17 @@ class SmartThingsAirConditioner(SmartThingsEntity, ClimateEntity):
 
     async def async_set_preset_mode(self, preset_mode):
         """Set new target fan mode."""
-        if self.is_faulty_quiet and preset_mode == "quiet":
-            result = await self._device.execute(
-                "mode/convenient/vs/0", {"x.com.samsung.da.modes": "Quiet"}
-            )
-        else:
-            result = await self._device.command(
-                "main",
-                "custom.airConditionerOptionalMode",
-                "setAcOptionalMode",
-                [preset_mode],
-            )
+    #    if self.is_faulty_quiet and preset_mode == "quiet":
+    #        result = await self._device.execute(
+    #            "mode/convenient/vs/0", {"x.com.samsung.da.modes": "Quiet"}
+    #        )
+    #    else:
+        result = await self._device.command(
+            "main",
+            "custom.airConditionerOptionalMode",
+            "setAcOptionalMode",
+            [preset_mode],
+        )
         if result:
             self._device.status.update_attribute_value("acOptionalMode", preset_mode)
         self.async_write_ha_state()
@@ -510,9 +511,13 @@ class SmartThingsAirConditioner(SmartThingsEntity, ClimateEntity):
             str(x)
             for x in self._device.status.attributes["supportedAcOptionalMode"].value
         ]
-        if "quiet" not in supported_ac_optional_modes and model == "ARTIK051_PRAC_20K":
+        if "quiet" not in supported_ac_optional_modes and model == "ARTIK051_KRAC_18K":
             supported_ac_optional_modes.append("quiet")
             self.is_faulty_quiet = True
+            
+        if "speed" not in supported_ac_optional_modes and model == "ARTIK051_KRAC_18K":
+            supported_ac_optional_modes.append("speed")
+            self.is_faulty_speed = True
 
         if self._device.status.air_conditioner_mode in ("auto", "heat"):
             if any(
