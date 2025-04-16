@@ -21,6 +21,3 @@ All other features are similar to viesta's SmartThings Custom Integration.
 - Restart Home Assistant
 - Install `SmartThings` from the HA Integrations tab
 - Enjoy!
-
-## Notes:
-- If you like the integration please star this repository and concider donating or becoming a sponsor.
